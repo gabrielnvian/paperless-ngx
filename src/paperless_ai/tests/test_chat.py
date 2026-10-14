@@ -395,6 +395,37 @@ class TestStreamChatRetrieval:
         assert str(included.pk) in filter_values
         assert str(excluded.pk) not in filter_values
 
+    @pytest.mark.parametrize("top_k", [5, 20])
+    def test_retriever_uses_configured_top_k(
+        self,
+        temp_llm_index_dir: Path,
+        mock_embed_model: pytest_mock.MockType,
+        mocker: pytest_mock.MockerFixture,
+        settings,
+        top_k: int,
+    ) -> None:
+        """similarity_top_k comes from PAPERLESS_AI_LLM_CHAT_TOP_K."""
+        settings.LLM_CHAT_TOP_K = top_k
+        doc = DocumentFactory.create(content="some document content")
+        indexing.llm_index_add_or_update_document(doc)
+
+        retriever = mocker.MagicMock()
+        retriever.retrieve.return_value = []
+        mocker.patch("paperless_ai.chat.AIClient")
+        retriever_cls = mocker.patch(
+            "llama_index.core.retrievers.VectorIndexRetriever",
+            return_value=retriever,
+        )
+
+        list(
+            chat.stream_chat_with_documents(
+                "question?",
+                Document.objects.filter(pk=doc.pk),
+            ),
+        )
+
+        assert retriever_cls.call_args.kwargs["similarity_top_k"] == top_k
+
     def test_unrestricted_chat_excludes_nothing_when_no_documents_are_trashed(
         self,
         temp_llm_index_dir: Path,
@@ -469,7 +500,7 @@ class TestStreamChatRetrieval:
         django_assert_num_queries,
     ) -> None:
         """Building references must not hydrate every document the caller is
-        permitted to see -- only the (<= CHAT_RETRIEVER_TOP_K) documents that
+        permitted to see -- only the (<= PAPERLESS_AI_LLM_CHAT_TOP_K) documents that
         the retriever actually returned nodes for.
         """
         referenced = DocumentFactory.create(title="Referenced Document")

@@ -178,6 +178,18 @@ def test_get_rag_prompt_helper_uses_context_setting() -> None:
     assert prompt_helper.context_window == 4096
 
 
+def test_get_rag_prompt_helper_chunk_size_limit() -> None:
+    limited = indexing.get_rag_prompt_helper(chunk_size=512, context_size=8192)
+    unlimited = indexing.get_rag_prompt_helper(
+        chunk_size=512,
+        context_size=8192,
+        limit_chunk_size=False,
+    )
+
+    assert limited.chunk_size_limit == 512
+    assert unlimited.chunk_size_limit is None
+
+
 def test_truncate_embedding_query_returns_single_chunk() -> None:
     content = " ".join(f"word{i}" for i in range(200))
 

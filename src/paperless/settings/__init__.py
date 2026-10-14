@@ -1226,6 +1226,9 @@ if LLM_EMBEDDING_CHUNK_SIZE < 1:
 LLM_CONTEXT_SIZE = get_int_from_env("PAPERLESS_AI_LLM_CONTEXT_SIZE", 8192)
 if LLM_CONTEXT_SIZE < 1:
     raise ImproperlyConfigured("PAPERLESS_AI_LLM_CONTEXT_SIZE must be >= 1")
+LLM_CHAT_TOP_K = get_int_from_env("PAPERLESS_AI_LLM_CHAT_TOP_K", 5)
+if LLM_CHAT_TOP_K < 1:
+    raise ImproperlyConfigured("PAPERLESS_AI_LLM_CHAT_TOP_K must be >= 1")
 LLM_REQUEST_TIMEOUT = get_int_from_env("PAPERLESS_AI_LLM_REQUEST_TIMEOUT", 120)
 if LLM_REQUEST_TIMEOUT < 1:
     raise ImproperlyConfigured("PAPERLESS_AI_LLM_REQUEST_TIMEOUT must be >= 1")

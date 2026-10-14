@@ -23,7 +23,6 @@ CHAT_METADATA_DELIMITER = "\n\n__PAPERLESS_CHAT_METADATA__"
 CHAT_ERROR_MESSAGE = "Sorry, something went wrong while generating a response."
 CHAT_NO_CONTENT_MESSAGE = "Sorry, I couldn't find any content to answer your question."
 MAX_CHAT_REFERENCES = 3
-CHAT_RETRIEVER_TOP_K = 5
 
 
 def _build_chat_prompt(output_language: str | None) -> str:
@@ -149,7 +148,7 @@ def _stream_chat_with_documents(
         index = load_or_build_index(config, store)
         retriever = VectorIndexRetriever(
             index=index,
-            similarity_top_k=CHAT_RETRIEVER_TOP_K,
+            similarity_top_k=config.llm_chat_top_k,
             filters=filters,
         )
 
@@ -174,6 +173,7 @@ def _stream_chat_with_documents(
             prompt_helper=get_rag_prompt_helper(
                 chunk_size=config.llm_embedding_chunk_size,
                 context_size=config.llm_context_size,
+                limit_chunk_size=False,
             ),
             text_qa_template=prompt_template,
             refine_template=refine_template,

@@ -2170,6 +2170,14 @@ context by default.
 
     Defaults to 8192.
 
+#### [`PAPERLESS_AI_LLM_CHAT_TOP_K=<int>`](#PAPERLESS_AI_LLM_CHAT_TOP_K) {#PAPERLESS_AI_LLM_CHAT_TOP_K}
+
+: The number of document chunks retrieved from the vector index and passed to the LLM for each
+chat question. Raise this, together with `PAPERLESS_AI_LLM_CONTEXT_SIZE`, when using models with
+large context windows so answers can draw on more of your documents.
+
+    Defaults to 5.
+
 #### [`PAPERLESS_AI_LLM_REQUEST_TIMEOUT=<int>`](#PAPERLESS_AI_LLM_REQUEST_TIMEOUT) {#PAPERLESS_AI_LLM_REQUEST_TIMEOUT}
 
 : The timeout, in seconds, for requests to the configured AI backend. Increase this when using

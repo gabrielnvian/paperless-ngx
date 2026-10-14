@@ -335,7 +335,12 @@ def get_rag_prompt_helper(
     *,
     chunk_size: int | None = None,
     context_size: int | None = None,
+    limit_chunk_size: bool = True,
 ):
+    """With ``limit_chunk_size=False`` the response synthesizer packs as much
+    retrieved text into each LLM call as the context window allows, instead of
+    re-splitting it into embedding-sized pieces and refining over many calls.
+    """
     from llama_index.core.indices.prompt_helper import PromptHelper
 
     if chunk_size is None or context_size is None:
@@ -347,7 +352,7 @@ def get_rag_prompt_helper(
         context_window=context_size,
         num_output=RAG_NUM_OUTPUT,
         chunk_overlap_ratio=0.1,
-        chunk_size_limit=chunk_size,
+        chunk_size_limit=chunk_size if limit_chunk_size else None,
     )
 
 

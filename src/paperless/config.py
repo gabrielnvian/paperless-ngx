@@ -255,6 +255,7 @@ class AIConfig(BaseConfig):
     llm_embedding_endpoint: str = dataclasses.field(init=False)
     llm_embedding_chunk_size: int = dataclasses.field(init=False)
     llm_context_size: int = dataclasses.field(init=False)
+    llm_chat_top_k: int = dataclasses.field(init=False)
     llm_request_timeout: int = dataclasses.field(init=False)
     llm_backend: str = dataclasses.field(init=False)
     llm_model: str = dataclasses.field(init=False)
@@ -288,6 +289,7 @@ class AIConfig(BaseConfig):
             app_config.llm_embedding_chunk_size or settings.LLM_EMBEDDING_CHUNK_SIZE
         )
         self.llm_context_size = app_config.llm_context_size or settings.LLM_CONTEXT_SIZE
+        self.llm_chat_top_k = settings.LLM_CHAT_TOP_K
         self.llm_request_timeout = (
             app_config.llm_request_timeout or settings.LLM_REQUEST_TIMEOUT
         )
